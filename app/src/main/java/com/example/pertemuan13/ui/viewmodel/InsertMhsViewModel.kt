@@ -20,7 +20,7 @@ class InsertMhsViewModel (private val mhs : MahasiswaRepository) : ViewModel() {
     }
 
 
-    suspend fun InsertMhs() {
+    suspend fun insertMhs() {
         viewModelScope.launch {
             try {
                 mhs.insertMahasiswa(uiState.insertMhsUiEvent.toMhs())
@@ -55,7 +55,7 @@ fun InsertMhsUiEvent.toMhs(): Mahasiswa = Mahasiswa(
 )
 
 fun Mahasiswa.toUiStateMhs(): InsertMhsUiState = InsertMhsUiState(
-    insertMhsUiEvent = InsertMhsUiEvent()
+    insertMhsUiEvent = toInsertMhsUiEvent()
 )
 
 fun Mahasiswa.toInsertMhsUiEvent(): InsertMhsUiEvent = InsertMhsUiEvent(
