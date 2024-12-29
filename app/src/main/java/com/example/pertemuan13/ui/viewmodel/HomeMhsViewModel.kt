@@ -41,4 +41,19 @@ class HomeMhsViewModel(private val mhs: MahasiswaRepository) : ViewModel() {
             }
         }
     }
+
+
+    fun deleteMhs(nim: String) {
+        viewModelScope.launch {
+            try {
+                mhs.deleteMahasiswa(nim)
+
+            } catch (e: IOException) {
+                e.printStackTrace()
+            } catch (e: HttpException) {
+                HomeMhsUiState.Error
+            }
+        }
+    }
 }
+
