@@ -15,3 +15,12 @@ class InsertMhsViewModel (private val mhs : MahasiswaRepository) : ViewModel() {
 data class InsertMhsUiState (
     val insertMhsUiEvent : InsertMhsUiEvent = InsertMhsUiEvent()
 )
+
+data class InsertMhsUiEvent(
+    val nim: String = "",
+    val nama: String = "",
+    val alamat: String = "",
+    val kelas: String = "",
+    val angkatan: String = "",
+    val jenisKelamin: String = ""
+)
