@@ -22,5 +22,5 @@ class MahasiswaContainer : AppContainer {
     private val mahasiswaService: MahasiswaService by lazy { retrofit.create(MahasiswaService::class.java)
     }
 
-    override val mahasiswaRepository: MahasiswaRepository by lazy { NetworkKontakRepository(mahasiswaService) }
+    override val mahasiswaRepository: MahasiswaRepository by lazy { NetworkMahasiswaRepository(mahasiswaService) }
 }

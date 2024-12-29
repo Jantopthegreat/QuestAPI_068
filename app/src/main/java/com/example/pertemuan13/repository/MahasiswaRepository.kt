@@ -17,7 +17,7 @@ interface MahasiswaRepository{
 
 }
 
-class NetworkKontakRepository(
+class NetworkMahasiswaRepository(
     private val mahasiswaApiService: MahasiswaService
 ) : MahasiswaRepository {
 
