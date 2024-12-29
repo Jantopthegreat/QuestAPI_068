@@ -13,10 +13,8 @@ import retrofit2.http.Query
 interface MahasiswaService {
 
     @Headers(
-        "Accept : application/json",
-        "Content-Type: application/json",
-
-
+        "Accept:application/json",
+        "Content-Type:application/json",
     )
 
     @GET("bacamahasiswa.php")
