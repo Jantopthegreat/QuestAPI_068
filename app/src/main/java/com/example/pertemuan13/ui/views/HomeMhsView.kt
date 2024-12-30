@@ -52,6 +52,83 @@ object DestinasiHome : DestinasiNavigasi {
     override val titleRes = "Daftar Mahasiswa"
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun HomeScreen(
+    navigateToItemEntry: () -> Unit,
+    modifier: Modifier = Modifier,
+    onDetailClick: (String) -> Unit = {},
+    onEditClick: (String) -> Unit = {},
+    viewModel: HomeMhsViewModel = viewModel(factory = PenyediaViewModel.Factory)
+) {
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    Scaffold(
+        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        topBar = {
+            TopAppBar(
+                title = DestinasiHome.titleRes,
+                canNavigateBack = false,
+                scrollBehavior = scrollBehavior,
+                onRefresh = {
+                    viewModel.getMahasiswa()
+                }
+            )
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = navigateToItemEntry,
+                shape = MaterialTheme.shapes.medium,
+                modifier = Modifier.padding(18.dp)
+            ) {
+                Icon(imageVector = Icons.Default.Add, contentDescription = "Add Mahasiswa")
+            }
+        },
+    ) { innerPadding ->
+        HomeStatus(
+            homeMhsUiState = viewModel.mhsUiState,
+            retryAction = { viewModel.getMahasiswa() },
+            modifier = Modifier.padding(innerPadding),
+            onDetailClick = onDetailClick,
+            onEditClick = onEditClick,
+            onDeleteClick = {
+                viewModel.deleteMhs(it.nim)
+                viewModel.getMahasiswa()
+            }
+        )
+    }
+}
+
+@Composable
+fun HomeStatus(
+    homeMhsUiState: HomeMhsUiState,
+    retryAction: () -> Unit,
+    modifier: Modifier = Modifier,
+    onDeleteClick: (Mahasiswa) -> Unit = {},
+    onDetailClick: (String) -> Unit,
+    onEditClick: (String) -> Unit,
+) {
+    when (homeMhsUiState) {
+        is HomeMhsUiState.Loading -> OnLoading(modifier = modifier.fillMaxSize())
+
+        is HomeMhsUiState.Success -> {
+            if (homeMhsUiState.mahasiswa.isEmpty()) {
+                Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Text(text = "Tidak ada data Mahasiswa")
+                }
+            } else {
+                MhsLayout(
+                    mahasiswa = homeMhsUiState.mahasiswa,
+                    modifier = modifier.fillMaxWidth(),
+                    onDetailClick = { onDetailClick(it.nim) },
+                    onEditClick = { onEditClick(it.nim) },
+                    onDeleteClick = { onDeleteClick(it) }
+                )
+            }
+        }
+        is HomeMhsUiState.Error -> OnError(retryAction, modifier = modifier.fillMaxSize())
+    }
+}
+
 @Composable
 fun OnLoading(modifier: Modifier = Modifier) {
     Image(
