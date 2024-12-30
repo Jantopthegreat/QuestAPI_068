@@ -46,6 +46,90 @@ object DestinasiDetail : DestinasiNavigasi {
     val routeWithArgs = "$route/{$nim}"
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DetailMhsView(
+    modifier: Modifier = Modifier,
+    navigateBack: () -> Unit,
+    onEditClick: (String) -> Unit,
+    detailViewModel: DetailMhsViewModel = viewModel(factory = PenyediaViewModel.Factory)
+){
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+
+    Scaffold(
+        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        topBar = {
+            TopAppBar(
+                title = DestinasiDetail.titleRes,
+                canNavigateBack = true,
+                scrollBehavior = scrollBehavior,
+                navigateUp = navigateBack
+            )
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    val nim = (detailViewModel.detailMhsUiState as? DetailMhsUiState.Success)?.mahasiswa?.nim
+                    if (nim != null) onEditClick(nim)
+                },
+                shape = MaterialTheme.shapes.medium
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Edit,
+                    contentDescription = "Edit Mahasiswa",
+                )
+            }
+        }
+    ) { innerPadding ->
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(innerPadding)
+        ) {
+            DetailStatus(
+                mhsUiState = detailViewModel.detailMhsUiState,
+                retryAction = { detailViewModel.getMhsbyNim() },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.Center)
+                    .padding(16.dp)
+            )
+        }
+    }
+}
+
+@Composable
+fun DetailStatus(
+    mhsUiState: DetailMhsUiState,
+    retryAction: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    when (mhsUiState) {
+        is DetailMhsUiState.Success -> {
+            DetailCard(
+                mahasiswa = mhsUiState.mahasiswa,
+                modifier = modifier.padding(16.dp)
+            )
+        }
+
+        is DetailMhsUiState.Loading -> {
+            Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator()
+            }
+        }
+
+        is DetailMhsUiState.Error -> {
+            Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(text = "Terjadi kesalahan.")
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Button(onClick = retryAction) {
+                        Text(text = "Coba Lagi")
+                    }
+                }
+            }
+        }
+    }
 }
 
 @Composable
