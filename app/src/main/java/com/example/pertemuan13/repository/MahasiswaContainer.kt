@@ -10,7 +10,7 @@ interface AppContainer { val mahasiswaRepository : MahasiswaRepository }
 
 
 class MahasiswaContainer : AppContainer {
-    private val baseUrl = "http://localhost:8080/umyTI/" //localhost diganti ip kalo run di hp
+    private val baseUrl = "http://192.168.18.132:8080/umyTI/" // http://localhost:8080/umyTI/
 
 
     private val json = Json { ignoreUnknownKeys = true }

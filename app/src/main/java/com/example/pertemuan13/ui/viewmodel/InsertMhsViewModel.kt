@@ -54,9 +54,9 @@ fun InsertMhsUiEvent.toMhs(): Mahasiswa = Mahasiswa(
     jenisKelamin = jenisKelamin
 )
 
-fun Mahasiswa.toUiStateMhs(): InsertMhsUiState = InsertMhsUiState(
+    fun Mahasiswa.toUiStateMhs(): InsertMhsUiState = InsertMhsUiState(
     insertMhsUiEvent = toInsertMhsUiEvent()
-)
+    )
 
 fun Mahasiswa.toInsertMhsUiEvent(): InsertMhsUiEvent = InsertMhsUiEvent(
     nim = nim,
